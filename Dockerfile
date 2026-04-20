@@ -18,6 +18,7 @@ RUN export DEBIAN_FRONTEND=noninteractive; \
       php8.3-curl \
       php8.3-ldap \
       php8.3-mysql \
+      php8.3-pgsql \
       php8.3-gd \
       php8.3-xml \
       php8.3-mbstring \

@@ -1,22 +1,4 @@
 services:
-  - type: pserv
-    name: snipeit-mariadb
-    env: image
-    image: mariadb:11.4
-    disk:
-      name: snipeit-db-data
-      mountPath: /var/lib/mysql
-      sizeGB: 1
-    envVars:
-      - key: MYSQL_ROOT_PASSWORD
-        generateValue: true
-      - key: MYSQL_DATABASE
-        value: snipeit
-      - key: MYSQL_USER
-        value: snipeit
-      - key: MYSQL_PASSWORD
-        generateValue: true
-
   - type: web
     name: snipeit-app
     env: docker
@@ -26,23 +8,33 @@ services:
       mountPath: /var/lib/snipeit
       sizeGB: 1
     envVars:
+      - key: APP_DEBUG
+        value: "true"
       - key: DB_CONNECTION
-        value: mysql
+        value: pgsql
       - key: DB_HOST
-        fromService:
-          type: pserv
-          name: snipeit-mariadb
-          envVarKey: RENDER_DISCOVERY_NAME
+        fromDatabase:
+          name: snipeit-postgres
+          property: host
       - key: DB_PORT
-        value: 3306
+        fromDatabase:
+          name: snipeit-postgres
+          property: port
       - key: DB_DATABASE
-        value: snipeit
+        fromDatabase:
+          name: snipeit-postgres
+          property: database
       - key: DB_USERNAME
-        value: snipeit
+        fromDatabase:
+          name: snipeit-postgres
+          property: user
       - key: DB_PASSWORD
-        fromService:
-          type: pserv
-          name: snipeit-mariadb
-          envVarKey: MYSQL_PASSWORD
+        fromDatabase:
+          name: snipeit-postgres
+          property: password
       - key: APP_KEY
         generateValue: true
+
+databases:
+  - name: snipeit-postgres
+    plan: free
