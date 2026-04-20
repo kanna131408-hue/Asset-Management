@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Render.com specific environment configuration
+if [ -n "${RENDER_EXTERNAL_URL}" ]; then
+  export APP_URL="${RENDER_EXTERNAL_URL}"
+  export APP_TRUSTED_PROXIES="*"
+fi
+
 # Cribbed from nextcloud docker official repo
 # https://github.com/nextcloud/docker/blob/master/docker-entrypoint.sh
 # usage: file_env VAR [DEFAULT]
