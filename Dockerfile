@@ -6,45 +6,45 @@ LABEL maintainer="Brady Wetherington <bwetherington@grokability.com>"
 # - https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#apt-get
 
 RUN export DEBIAN_FRONTEND=noninteractive; \
-    export DEBCONF_NONINTERACTIVE_SEEN=true; \
-    echo 'tzdata tzdata/Areas select Etc' | debconf-set-selections; \
-    echo 'tzdata tzdata/Zones/Etc select UTC' | debconf-set-selections; \
-    apt-get update -qqy \
- && apt-get install -qqy --no-install-recommends \
-apt-utils \
-apache2 \
-apache2-bin \
-libapache2-mod-php8.3 \
-php8.3-curl \
-php8.3-ldap \
-php8.3-mysql \
-php8.3-gd \
-php8.3-xml \
-php8.3-mbstring \
-php8.3-zip \
-php8.3-bcmath \
-php8.3-redis \
-php-memcached \
-patch \
-curl \
-wget  \
-vim \
-git \
-cron \
-mysql-client \
-supervisor \
-cron \
-gcc \
-make \
-autoconf \
-libc-dev \
-libldap-common \
-pkg-config \
-php8.3-dev \
-ca-certificates \
-unzip \
-dnsutils \
-&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+      export DEBCONF_NONINTERACTIVE_SEEN=true; \
+      echo 'tzdata tzdata/Areas select Etc' | debconf-set-selections; \
+      echo 'tzdata tzdata/Zones/Etc select UTC' | debconf-set-selections; \
+      apt-get update -qqy \
+      && apt-get install -qqy --no-install-recommends \
+      apt-utils \
+      apache2 \
+      apache2-bin \
+      libapache2-mod-php8.3 \
+      php8.3-curl \
+      php8.3-ldap \
+      php8.3-mysql \
+      php8.3-gd \
+      php8.3-xml \
+      php8.3-mbstring \
+      php8.3-zip \
+      php8.3-bcmath \
+      php8.3-redis \
+      php-memcached \
+      patch \
+      curl \
+      wget  \
+      vim \
+      git \
+      cron \
+      mysql-client \
+      supervisor \
+      cron \
+      gcc \
+      make \
+      autoconf \
+      libc-dev \
+      libldap-common \
+      pkg-config \
+      php8.3-dev \
+      ca-certificates \
+      unzip \
+      dnsutils \
+      && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 
 RUN curl -L -O https://github.com/pear/pearweb_phars/raw/master/go-pear.phar
@@ -74,7 +74,7 @@ RUN a2ensite 001-default-ssl.conf
 COPY . /var/www/html
 
 RUN a2enmod rewrite
-
+RUN sed -i 's/Listen 80/Listen 0.0.0.0:80/' /etc/apache2/ports.conf
 COPY docker/column-statistics.cnf /etc/mysql/conf.d/column-statistics.cnf
 
 ############ INITIAL APPLICATION SETUP #####################
@@ -91,7 +91,7 @@ COPY docker/docker.env /var/www/html/.env
 RUN chown -R docker /var/www/html
 
 RUN \
-	rm -r "/var/www/html/storage/private_uploads" && ln -fs "/var/lib/snipeit/data/private_uploads" "/var/www/html/storage/private_uploads" \
+      rm -r "/var/www/html/storage/private_uploads" && ln -fs "/var/lib/snipeit/data/private_uploads" "/var/www/html/storage/private_uploads" \
       && rm -rf "/var/www/html/public/uploads" && ln -fs "/var/lib/snipeit/data/uploads" "/var/www/html/public/uploads" \
       && rm -r "/var/www/html/storage/app/backups" && ln -fs "/var/lib/snipeit/dumps" "/var/www/html/storage/app/backups" \
       && mkdir -p "/var/lib/snipeit/keys" && ln -fs "/var/lib/snipeit/keys/oauth-private.key" "/var/www/html/storage/oauth-private.key" \
