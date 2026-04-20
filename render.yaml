@@ -33,7 +33,7 @@ services:
           name: snipeit-postgres
           property: password
       - key: APP_KEY
-        generateValue: true
+        value: "base64:zpdnCiv1Erm1DEKaJcRWXYwSDzvNF61jzm5/58jl34M="
 
 databases:
   - name: snipeit-postgres
